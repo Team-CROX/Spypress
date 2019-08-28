@@ -27,6 +27,7 @@ import React from "react";
 */
 
 const Message = props => {
+  console.log(props);
   //HEADER
   const headArr = []; //Initalize empty array to render
   const hKArr = Object.keys(props.info.header); // Keys of Header
