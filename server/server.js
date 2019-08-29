@@ -3,7 +3,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const WebSocket = require("ws");
 const path = require('path');
-const bodyParser = require('body-parser');
+
 //Websocket Connection to port 2000;
 const wss = new WebSocket.Server({ port: 2000 });
 
