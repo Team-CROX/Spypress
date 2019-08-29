@@ -28,8 +28,6 @@ module.exports = {
       
       // parse all requests & cookies
       app.use((req, res, next) => {
-        console.log('middleware');
-        console.log(sockets.length);
         if (sockets.length) {
           //Obtain the request time in milliseconds
           req.requestTime = Date.now();
@@ -86,11 +84,8 @@ module.exports = {
 
             // send data from first and only stored websocket connection
             sockets[0].send(JSON.stringify(data));
-          }) 
-          next();
-        } else {
-          console.log('no socket connection');
-        }
+          }); 
+        } 
         next();
       })
 
