@@ -4,7 +4,7 @@ import StreamingChart from "../components/StreamingChart.jsx";
 class ChartContainer extends Component {
   constructor(props) {
     super(props)
-    this.getResponseTimes = this.getResponseTimes.bind(this);
+    // this.getResponseTimes = this.getResponseTimes.bind(this);
   }
 
   getResponseTimes(messageArr) {
@@ -14,12 +14,11 @@ class ChartContainer extends Component {
   }
 
   render() {
-    console.log("hi this is render")
     this.getResponseTimes(this.props.messageArr);
     return (
       <div className="charts-container">
         
-        <StreamingChart />
+        <StreamingChart messageArr={this.props.messageArr}/>
       </div>
     )
   }
