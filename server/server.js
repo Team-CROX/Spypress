@@ -3,7 +3,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const WebSocket = require("ws");
 const path = require('path');
-const bodyParser = require('body-parser');
+
 //Websocket Connection to port 2000;
 const wss = new WebSocket.Server({ port: 2000 });
 
@@ -89,7 +89,7 @@ wss.on("connection", function connection(ws) {
 });
 
 //Running NPM START. Need to go to localhost:3000/prod to view page.
-app.use('/build', express.static(path.join(__dirname, '../build')))
+app.use('/build', express.static(path.join(__dirname, '../package')))
 
 app.get('/prod', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
