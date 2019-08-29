@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux"; //Will need to use mapStateToProps & mapDispatchToProps
 import * as actions from "../actions/actions"; //Get all actions from actions folder;
-import Message from "../components/Message.jsx"; //import child component (Message);
+import MessageContainer from "./MessageContainer.jsx";
+import ChartContainer from "./ChartContainer.jsx";
 
 //Grab messageArray from state for props to use;
 const mapStateToProps = store => ({
@@ -33,25 +34,16 @@ class Connection extends Component {
   }
 
   render() {
-    //Initalize empty array to render each child component. (We're going to have more than one depending on how many requests we received)
-    const infoHolder = [];
-    //Destructure messageArr from this.props;
-    const { messageArr } = this.props
-
-    //Loop through each element inside messageArr (which is an object and send it down to child components);
-    messageArr.forEach((el, index) => {
-      //el = data object we pushed in. => send it down into the child component as a property/attribute;
-      infoHolder.push(<Message key={`${el}` + index } info={el}/>);
-    })
-    /*
-    We want every new request to be on the top when we render, 
-    therefore we want to reverse the array because otherwise every new request will be on the bottom
-    */
-    infoHolder.reverse();
-    //then return it to render;
-    return infoHolder;
+    const { messageArr } = this.props;
+    return(
+      <div className="container-container">
+        <ChartContainer messageArr={messageArr}/>
+        <MessageContainer messageArr={messageArr}/>
+      </div>
+    )
   }
 }
+
 
 //Needed to use mapStateToProps & mapDispatchToProps then export Main Container;
 export default connect(mapStateToProps,mapDispatchToProps)(Connection);

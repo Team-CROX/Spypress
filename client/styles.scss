@@ -1,42 +1,89 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
 $background: #F3EFF7;
 $pri-border-color: #5D2B82;
 $sec-border-color: #764699;
-$sec-background: #DFCBEC;
+$sec-background: #b8c4c5;
 $title-background: #F8C033;
-$footer-background: #C7ACDC;
+$footer-background: #b8c4c5;
+
+$pretty-orange: #d1552e;
+$pretty-purple: #9f5a70;
+$pretty-blue: #398eba;
+$pretty-grey: #b8c4c5;
+$pretty-white: #eff5f6;
+$pretty-green: #679d70;
+$pretty-in-pink: #ee9598;
 
 body {
   margin: 0;
   background-color: $background;
 }
 
-.message-container {
+
+.message-min {
+  $message-min-height: 40px;
+
+  font-family: roboto;
+  color: white;
+  height: $message-min-height;
+  line-height: $message-min-height;
+  width: 100%;
+  
+  text-align: center;
+
+  &:not(:first-child){
+    margin: 3px 0;
+  }
+  &.message-color-get {
+    background-color: $pretty-purple;
+  }
+  &.message-color-post {
+    background-color: $pretty-green;
+  }
+  &.message-color-patch {
+    background-color: $pretty-blue;
+  }
+  &.message-color-put {
+    background-color: $pretty-blue;
+  }
+  &.message-color-delete {
+    background-color: $pretty-in-pink;
+  }
+} 
+.message-details {
   display: grid;
   grid-template-areas: "mt mt"
                        "hi bi"
                        "ci ci";
-  border: 5px solid $pri-border-color;
-  border-radius: 10px;
-  margin: 5rem 15rem;
+  backface-visibility: hidden;
+  background-color: $pretty-grey;
   height: 400px;
+  border: 10px solid rgba( $pretty-white, .5 );
+  background-clip: padding-box;
+  color: black;
+  line-height: 15px;
+  margin: 0 12px;
   pre {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
+  position: absolute;
+  width: 70vw;
+  right: 0;
 }
 
 .method-type {
   grid-area: mt;
   text-align: center;
-  border-bottom: 5px solid $footer-background;
+  // border-bottom: 5px solid $footer-background;
   background-color: $title-background;
 }
 
 .header-info {
   grid-area: hi;
-  border-right: 5px solid $footer-background;
+  border-right: 5px solid white;
   background-color: $sec-background;
+  margin-top:10px;
   max-height: 100%;
   overflow-y: scroll;
   h3 {
@@ -69,5 +116,27 @@ body {
   }
   p {
     color: $background;
+  }
+}
+.container-container {
+  display: flex;
+  min-width: 300px;
+  min-height: 300px;
+  width: 100%;
+}
+.messages-container {
+  width: 30%;
+  overflow-y: scroll;
+}
+.charts-container {
+  width: 70%;
+}
+
+@media (max-width: 613px) {
+  .container-container {
+    flex-direction: column-reverse;
+  }
+  .messages-container, .charts-container {
+    width: auto;
   }
 }

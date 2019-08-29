@@ -17,6 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chart.js": "^2.8.0",
+    "chartjs-plugin-streaming": "^1.8.0",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
     "install": "^0.13.0",
@@ -25,12 +27,14 @@
     "npm": "^6.11.2",
     "path": "^0.12.7",
     "react": "^16.9.0",
+    "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.9.0",
     "react-hot-loader": "^4.12.11",
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "redux": "^4.0.4",
+    "redux-persist": "^5.10.0",
     "ws": "^7.1.2"
   },
   "devDependencies": {
