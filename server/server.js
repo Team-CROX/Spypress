@@ -22,12 +22,12 @@ wss.on("connection", function connection(ws) {
   console.log('connection made');
   sockets.push(ws);
   console.log(sockets);
-  //ON Connection parse all requests & cookies
 });
 
 app.use(express.json());
 app.use(cookieParser());
 
+// parse all requests & cookies
 app.use((req, res, next) => {
   if (sockets.length) {
     //Obtain the request time in milliseconds
