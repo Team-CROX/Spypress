@@ -1,4 +1,5 @@
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const path = require('path');
 const wss = new WebSocket.Server({ port: 2000 });
@@ -16,14 +17,14 @@ function MSec2ms(MSec) {
 const sockets = [];
 
 module.exports = {
-    start: function(app, express) {
+    start: function(app) {
         
       //Event listener for WebSocket Connection.
       wss.on("connection", function connection(ws) { 
         sockets.push(ws);
       });
       
-      app.use(express.json());
+      app.use(bodyParser.json());
       app.use(cookieParser());
       
       // parse all requests & cookies
