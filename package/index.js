@@ -50,7 +50,8 @@ module.exports = {
             requestTime: null,
             elapsedTime: null,
             systemUsage: null,
-            applicationUsage: null
+            applicationUsage: null,
+            processMemoryUsage: null,
           };
 
           //Defining any requests that comes in such as Methods, Headers, Cookies & Body.
@@ -63,6 +64,10 @@ module.exports = {
           //Sending data object to WebSocket Server for Front-End to grab.
           res.on('finish', function (err, dataParam) {
             !res.statusCode ? data.statusCode = 'There is no status code' : data.statusCode = res.statusCode;
+            
+            //we would like to get the processMemoryUsage in bytes
+            const processMemoryUsage = process.memoryUsage();
+            data.processMemoryUsage = processMemoryUsage;
             
             //we would like to get the elasedTime in milliseconds(precise!)
             const elapsedTime = process.hrtime(requestTimeCalc);
