@@ -1,10 +1,8 @@
 const express = require("express");
 const app = express();
 const cookieParser = require('cookie-parser');
-const WebSocket = require("ws");
+const WebSocket = require('ws');
 const path = require('path');
-
-//Websocket Connection to port 2000;
 const wss = new WebSocket.Server({ port: 2000 });
 
 // [seconds, nanoseconds] => milliseconds
@@ -17,16 +15,21 @@ function MSec2ms(MSec) {
   return MSec / 1000;
 }
 
+const sockets = [];
+        
 //Event listener for WebSocket Connection.
 wss.on("connection", function connection(ws) { 
-  
+  console.log('connection made');
+  sockets.push(ws);
+  console.log(sockets);
   //ON Connection parse all requests & cookies
-  app.use(express.json());
-  app.use(cookieParser());
+});
 
-  //Listen on all Requests
-  app.use("*", (req, res, next) => {
+app.use(express.json());
+app.use(cookieParser());
 
+app.use((req, res, next) => {
+  if (sockets.length) {
     //Obtain the request time in milliseconds
     req.requestTime = Date.now();
 
@@ -80,19 +83,17 @@ wss.on("connection", function connection(ws) {
       data.systemUsage = Number((100 * (elapSystem / elapsedTimeMS)).toFixed(3));
       data.applicationUsage = Number((100 * (elapUser / elapsedTimeMS)).toFixed(3));
 
-      ws.send(JSON.stringify(data));
-    });
-    //Connection Confirmation.
-    next();
-  });
-  //[INSERT YOUR ROUTES HERE];
-});
+      sockets[0].send(JSON.stringify(data));
+    }) 
+  } 
+  next();
+})
 
 //Running NPM START. Need to go to localhost:3000/prod to view page.
-app.use('/build', express.static(path.join(__dirname, '../package')))
+app.use('/build', (req, res) => res.sendFile(path.join(__dirname, '../package/bundle.js')))
 
 app.get('/prod', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 })
 
 app.listen(3000, () => {

@@ -13,19 +13,24 @@ function MSec2ms(MSec) {
   return MSec / 1000;
 }
 
+const sockets = [];
+
 module.exports = {
     start: function(app, express) {
         
       //Event listener for WebSocket Connection.
       wss.on("connection", function connection(ws) { 
-        
-        //ON Connection parse all requests & cookies
-        app.use(express.json());
-        app.use(cookieParser());
-
-        //Listen on all Requests
-        app.use("*", (req, res, next) => {
-
+        sockets.push(ws);
+      });
+      
+      app.use(express.json());
+      app.use(cookieParser());
+      
+      // parse all requests & cookies
+      app.use((req, res, next) => {
+        console.log('middleware');
+        console.log(sockets.length);
+        if (sockets.length) {
           //Obtain the request time in milliseconds
           req.requestTime = Date.now();
 
@@ -79,19 +84,22 @@ module.exports = {
             data.systemUsage = Number((100 * (elapSystem / elapsedTimeMS)).toFixed(3));
             data.applicationUsage = Number((100 * (elapUser / elapsedTimeMS)).toFixed(3));
 
-            ws.send(JSON.stringify(data));
-          });
-          //Connection Confirmation.
+            // send data from first and only stored websocket connection
+            sockets[0].send(JSON.stringify(data));
+          }) 
           next();
-        });
-        //[INSERT YOUR ROUTES HERE];
-      });
+        } else {
+          console.log('no socket connection');
+        }
+        next();
+      })
 
       //Running NPM START. Need to go to localhost:3000/prod to view page.
       app.use('/build', (req, res) => res.sendFile(path.join(__dirname, '/bundle.js')))
 
+      // Route for developer access to frontend
       app.get('/prod', (req, res) => {
           res.sendFile(path.join(__dirname, '/index.html'));
       })
     }
-};
+  }
