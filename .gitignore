@@ -2,3 +2,4 @@ node_modules
 build
 client/styles.css
 package-lock.json
+package/bundle.js
