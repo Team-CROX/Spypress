@@ -11,7 +11,7 @@ module.exports = {
     publicPath: "/build/", //host path for our bundle & assets;
   },
   output: {
-    path: path.join(__dirname, "./build"),
+    path: path.join(__dirname, "./package"),
     filename: "bundle.js"
   },
   module: {
