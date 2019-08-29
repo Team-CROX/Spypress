@@ -8,13 +8,12 @@ import { Bubble } from 'react-chartjs-2';
 class StreamingChart extends Component {
   constructor(props) {
     super(props)
-    this.messages = this.messages.bind(this);
+    // this.onRef = this.onRef.bind(this);
   }
   shouldComponentUpdate(nextProps, nextState){
     return false;
   }
 
-  messages() {return this.props.messageArr}
   render(){
     return (
       
@@ -22,21 +21,57 @@ class StreamingChart extends Component {
         data={{
           datasets: [
             {
-              label: 'systemUsage',
-              borderColor: '#9f5a70',
+              label: 'removeme',
+              borderColor: 'rgba(0,0,0,0)',
               fill: false,
+              pointRadius: 10,
+              pointBackgroundColor: '#9f5a70',
+
+              data: []
+            },
+            {
+              label: 'removeme',
+              borderColor: 'rgba(0,0,0,0)',
+              fill: false,
+              pointRadius: 10,
+              pointBackgroundColor: '#398eba',
+
+              data: []
+            },
+            {
+              label: 'removeme',
+              borderColor: 'rgba(0,0,0,0)',
+              fill: false,
+              pointRadius: 10,
+              pointBackgroundColor: '#679d70',
+
+              data: []
+            },
+            {
+              label: 'systemUsage',
+              fill: false,
+              borderColor: '#9f5a70',
+              pointRadius: 0,
+              pointBackgroundColor: 'rgba(0,0,0,0)',
+
               data: []
             },
             {
               label: 'applicationUsage',
-              borderColor: '#398eba',
               fill: false,
+              borderColor: '#398eba',
+              pointRadius: 0,
+              pointBackgroundColor: 'rgba(0,0,0,0)',
+
               data: []
             },
             {
               label: 'elapsedTime',
-              borderColor: '#679d70',
               fill: false,
+              borderColor: '#679d70',
+              pointRadius: 0,
+              pointBackgroundColor: 'rgba(0,0,0,0)',
+
               data: []
             },
           ]
@@ -46,22 +81,76 @@ class StreamingChart extends Component {
             streaming: {
               onRefresh: function(chart) {
                 let messageArr = JSON.parse(JSON.parse(globalThis.localStorage["persist:root"]).messageArray);
-                // datasets[0] is  systemUsage
-                chart.data.datasets[0].data.push({
+                let latestSystemUsage = messageArr[messageArr.length - 1].systemUsage;
+                let latestApplicationUsage = messageArr[messageArr.length - 1].applicationUsage;
+                let latestElapsedTime = messageArr[messageArr.length - 1].elapsedTime;
+
+                // if we have only one message
+                if (messageArr.length === 1){
+                  this.setState({
+                    systemUsageAvg: latestSystemUsage,
+                    systemUsageSum: latestSystemUsage,
+                    applicationUsageAvg: latestApplicationUsage,
+                    applicationUsageSum: latestApplicationUsage,
+                    elapsedTimeAvg: latestElapsedTime,
+                    elapsedTimeSum: latestElapsedTime,
+                  })
+                }
+                // if we have more than one message and a new unplotted message
+                if(this.state && this.state.messageCount && messageArr.length>this.state.messageCount){
+                  //calculate new avgs
+                  this.setState({
+                    systemUsageAvg: ((this.state.systemUsageSum + latestSystemUsage)/(this.state.messageCount +1)),
+                    systemUsageSum: this.state.systemUsageSum + latestSystemUsage,
+                    applicationUsageAvg: ((this.state.applicationUsageSum + latestApplicationUsage)/(this.state.messageCount +1)),
+                    applicationUsageSum: this.state.applicationUsageSum + latestApplicationUsage,
+                    elapsedTimeAvg: ((this.state.elapsedTimeSum + latestElapsedTime)/(this.state.messageCount +1)),
+                    elapsedTimeSum: this.state.elapsedTimeSum + latestElapsedTime,
+                  })
+                  
+                  // plot new data Dots
+                  
+                  // datasets[0] is  systemUsage
+                  chart.data.datasets[0].data.push({
+                    x: Date.now(),
+                    y: latestSystemUsage,
+                  });
+
+                  // datasets[1] is  applicationUsage
+                  chart.data.datasets[1].data.push({
+                    x: Date.now(),
+                    y: latestApplicationUsage,
+                  });
+
+                  // datasets[2] is  elapsedTime
+                  chart.data.datasets[2].data.push({
+                    x: Date.now(),
+                    y: latestElapsedTime,
+                  });
+                }
+
+                // regardless of whether we have a new message, plot the current avgs
+                  // datasets[3] is  systemUsageAvg
+                chart.data.datasets[3].data.push({
                   x: Date.now(),
-                  y: messageArr[messageArr.length - 1].systemUsage,
+                  y: latestSystemUsage,
                 });
-                // datasets[1] is  applicationUsage
-                chart.data.datasets[1].data.push({
+
+                // datasets[4] is  applicationUsageAvg
+                chart.data.datasets[4].data.push({
                   x: Date.now(),
-                  y: messageArr[messageArr.length - 1].applicationUsage,
+                  y: latestApplicationUsage,
                 });
-                // datasets[2] is  elapsedTime
-                chart.data.datasets[2].data.push({
+
+                // datasets[5] is  elapsedTimeAvg
+                chart.data.datasets[5].data.push({
                   x: Date.now(),
-                  y: messageArr[messageArr.length - 1].elapsedTime,
+                  y: latestElapsedTime,
                 });
-              },
+
+                this.setState({messageCount: messageArr.length});
+
+              }.bind(this),
               delay: 500,
               refresh: 500,
               frameRate: 30,
@@ -78,6 +167,14 @@ class StreamingChart extends Component {
                 // onRefresh: onRefresh
               }
             }]
+          },
+          legend: {
+            labels: {
+              filter: function(item, chart) {
+                // Logic to remove a particular legend item goes here
+                return !item.text.includes('removeme');
+              }
+            }
           }
         }}
       />
