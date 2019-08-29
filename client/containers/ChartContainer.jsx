@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import StreamingChart from "../components/StreamingChart.jsx";
 
 class ChartContainer extends Component {
   constructor(props) {
@@ -16,9 +17,9 @@ class ChartContainer extends Component {
     console.log("hi this is render")
     this.getResponseTimes(this.props.messageArr);
     return (
-      <div>
-        <h1>hello</h1>
-        {/* <ResponseTimeChart /> */}
+      <div className="charts-container">
+        
+        <StreamingChart />
       </div>
     )
   }
