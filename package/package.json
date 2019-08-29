@@ -1,6 +1,6 @@
 {
   "name": "spypress-crocs",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "spypress middleware",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,7 @@
   "author": "Sam Parsons",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "path": "^0.12.7",
     "ws": "^7.1.2"
