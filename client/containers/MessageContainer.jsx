@@ -4,6 +4,9 @@ import React, { Component } from "react";
 
 
 class MessageContainer extends Component {
+  constructor(props) {
+    super(props)
+  }
   render() {
     //Initalize empty array to render each child component. (We're going to have more than one depending on how many requests we received)
     let messageComponentArr = [];
@@ -22,7 +25,7 @@ class MessageContainer extends Component {
     messageComponentArr.reverse();
     //then return it to render;
     return (
-      <div>
+      <div className="messages-container">
         {messageComponentArr}
       </div>
       );

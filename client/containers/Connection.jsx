@@ -36,8 +36,7 @@ class Connection extends Component {
   render() {
     const { messageArr } = this.props;
     return(
-      <div>
-        <h1>goodbye </h1>
+      <div className="container-container">
         <ChartContainer messageArr={messageArr}/>
         <MessageContainer messageArr={messageArr}/>
       </div>

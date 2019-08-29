@@ -1,4 +1,7 @@
-import React from "react";
+// import React from "react";
+import React, { Component } from "react";
+
+import MessageDetails from "../components/MessageDetails.jsx"; //import child component (Message);
 
 /*
   Now each data we have access to inside this component is very unpleasing to the eye;
@@ -26,74 +29,85 @@ import React from "react";
     Therefore we want to parse this data and seperate each key and value pair so we can send them as innerHTML;
 */
 
-const Message = props => {
-  console.log(props);
+// const Message = props => {
+class Message extends Component {
+  constructor(props) {
+    super(props)
+    this.handleMouseHover = this.handleMouseHover.bind(this);
+    this.state = {
+      showDetails: false,
+    }
+  }
+
+  handleMouseHover () {
+    this.setState({showDetails: !this.state.showDetails});
+  }
+
+  pickMessageClass () {
+    let className = "message-min message-color-";
+    return className.concat(this.props.info.type.toLowerCase());
+  }
+
+  
+  render(){
   //HEADER
-  const headArr = []; //Initalize empty array to render
-  const hKArr = Object.keys(props.info.header); // Keys of Header
-  const hVArr = Object.values(props.info.header); // Values of Header
+    const headArr = []; //Initalize empty array to render
+    const hKArr = Object.keys(this.props.info.header); // Keys of Header
+    const hVArr = Object.values(this.props.info.header); // Values of Header
 
-  //loop through each key;
-  hKArr.forEach((key, index) => {
-    //push into initialize empty array a P TAG that seperates keys and values into a sentence w/ unique keys;
-    headArr.push(<p key={`${key}` + index} className="header-data">{key} = {hVArr[index]}</p>);
-  });
+    //loop through each key;
+    hKArr.forEach((key, index) => {
+      //push into initialize empty array a P TAG that seperates keys and values into a sentence w/ unique keys;
+      headArr.push(<p key={`${key}` + index} className="header-data">{key} = {hVArr[index]}</p>);
+    });
 
-  //BODY
-  //Need to parse through due to nested objects and arrays inside body object.
-  const flattenObject = object => {
-    return Object.assign( {}, ...function _flatten( objectBit, path = '' ) {  
-      return [].concat(                                                       
-        ...Object.keys( objectBit ).map(
-          key => typeof objectBit[ key ] === 'object' ? _flatten( objectBit[ key ], path + '+' ) : 
-          ( { [ `${ path }+ ${ key }` ]: objectBit[ key ] } )
-          )
-      )
-    }( object ) );
+    //BODY
+    //Need to parse through due to nested objects and arrays inside body object.
+    const flattenObject = object => {
+      return Object.assign( {}, ...function _flatten( objectBit, path = '' ) {  
+        return [].concat(                                                       
+          ...Object.keys( objectBit ).map(
+            key => typeof objectBit[ key ] === 'object' ? _flatten( objectBit[ key ], path + '+' ) : 
+            ( { [ `${ path }+ ${ key }` ]: objectBit[ key ] } )
+            )
+        )
+      }( object ) );
+    };
+
+    const bodyArr = [];
+    const newObj = flattenObject(this.props.info.body);
+    const bKArr = Object.keys(newObj);
+    const bVArr = Object.values(newObj);
+
+    bKArr.forEach((key, index) => {
+      bodyArr.push(<p key={`${key}` + index} className="body-data">{key} = {bVArr[index]}</p>);
+    })
+    //COOKIES
+    const cookieArr = [];
+    const cKArr = Object.keys(this.props.info.cookies);
+    const cVArr = Object.values(this.props.info.cookies);
+    cKArr.forEach((key, index) => {
+      cookieArr.push(<p key={`${key}` + index} className="cookie-data">Name: {key} | Value: {cVArr[index]}</p>);
+    });
+
+    return (
+
+      <div 
+        className={this.pickMessageClass()}
+        onMouseEnter={this.handleMouseHover}
+        onMouseLeave={this.handleMouseHover}
+      >
+        {this.props.info.type}
+        {this.state.showDetails && <MessageDetails 
+          type = {this.props.info.type}
+          headArr = {headArr}
+          bodyArr = {bodyArr}
+          cookieArr = {cookieArr}
+        />}
+      </div>
+    );
   };
 
-  const bodyArr = [];
-  const newObj = flattenObject(props.info.body);
-  const bKArr = Object.keys(newObj);
-  const bVArr = Object.values(newObj);
-
-  bKArr.forEach((key, index) => {
-    bodyArr.push(<p key={`${key}` + index} className="body-data">{key} = {bVArr[index]}</p>);
-  })
-  //COOKIES
-  const cookieArr = [];
-  const cKArr = Object.keys(props.info.cookies);
-  const cVArr = Object.values(props.info.cookies);
-  cKArr.forEach((key, index) => {
-    cookieArr.push(<p key={`${key}` + index} className="cookie-data">Name: {key} | Value: {cVArr[index]}</p>);
-  });
-
-  /*
-    Here we have a main message container;
-    This container is divided into 4 parts (Method-Types, Headers, Body, Cookies);
-  */
-  return (
-    <div className="message-container">
-      <div className="method-type">
-        <pre>{props.info.type} Request</pre>
-      </div>
-      <div className="header-info">
-        <pre> 
-          <h3>Header:</h3> 
-          {headArr}
-        </pre>
-      </div>
-      <div className="body-info">
-        <pre>
-          <h3>Body:</h3>
-          {bodyArr}
-        </pre>
-      </div>
-      <div className="cookies-info">
-        <pre>{cookieArr}</pre>
-      </div>
-    </div>
-  )
-};
+}
 
 export default Message;
